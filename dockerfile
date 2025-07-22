@@ -4,14 +4,15 @@ FROM python:3.10-slim
 # Define o diretório de trabalho
 WORKDIR /app
 
-# --- CORREÇÃO APLICADA AQUI ---
-# Instala as ferramentas de sistema (compiladores, etc.) necessárias
-# para construir dependências Python mais complexas.
+# Instala ferramentas de sistema essenciais (boa prática, mantém do passo anterior)
 RUN apt-get update && apt-get install -y --no-install-recommends gcc build-essential && rm -rf /var/lib/apt/lists/*
 
-# Copia e instala as dependências Python
+# Copia o arquivo de dependências
 COPY requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+
+# --- CORREÇÃO APLICADA AQUI ---
+# Usa o comando explícito 'python -m pip' para garantir que o pip seja encontrado
+RUN python -m pip install --no-cache-dir -r requirements.txt
 
 # Copia o resto da aplicação
 COPY . .
